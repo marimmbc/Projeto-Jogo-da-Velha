@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <sys/time.h>
 
 #include "screen.h"
 #include "keyboard.h"
@@ -170,7 +171,6 @@ void printKey(int ch)
     }
 }
 
-// Função principal
 int main()
 {
     static int ch = 0;
@@ -225,15 +225,31 @@ int main()
         }
         else
         {
-            // Solicita a jogada do jogador atual
-            printf("%s, escolha um número de 1 a 9: ", (currentPlayer == 1) ? player1 : player2);
-            scanf("%d", &ch);
+            int validMove = 0;
 
-            // Verifica se a jogada é válida
-            if (ch < 1 || ch > 9)
+            while (!validMove)
             {
-                printf("Número inválido. Escolha um número de 1 a 9.\n");
-                continue;
+                // Solicita a jogada do jogador atual
+                printf("%s, escolha um número de 1 a 9: ", (currentPlayer == 1) ? player1 : player2);
+                if (scanf("%d", &ch) == 1) // Verifica se a entrada é um número
+                {
+                    // Verifica se a jogada é válida
+                    if (ch >= 1 && ch <= 9 && board[(ch - 1) / 3][(ch - 1) % 3] == ' ')
+                    {
+                        validMove = 1;
+                    }
+                    else
+                    {
+                        printf("Posição inválida. Escolha outra.\n");
+                    }
+                }
+                else
+                {
+                    printf("Entrada inválida. Digite apenas um número.\n");
+                    // Limpar o buffer de entrada
+                    while (getchar() != '\n')
+                        ;
+                }
             }
 
             // Realiza a jogada do jogador
