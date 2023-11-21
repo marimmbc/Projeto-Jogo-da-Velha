@@ -9,9 +9,7 @@
 #include "timer.h"
 
 #define MAXX 80
-#define MINX 0
 #define MAXY 24
-#define MINY 0
 
 // Variáveis globais
 char board[3][3];                   // Representação do tabuleiro do jogo da velha
@@ -31,6 +29,47 @@ void initializeBoard()
     }
 }
 
+void screenDrawBorders()
+{
+    char hbc = BOX_HLINE;
+    char vbc = BOX_VLINE;
+
+    screenClear();
+    screenBoxEnable();
+
+    // Desenha as bordas do tabuleiro na tela
+    screenGotoxy(0, 0);
+    printf("%c", BOX_UPLEFT);
+
+    for (int i = 0 + 1; i < MAXX; i++)
+    {
+        screenGotoxy(i, 0);
+        printf("%c", hbc);
+    }
+    screenGotoxy(MAXX, 0);
+    printf("%c", BOX_UPRIGHT);
+
+    for (int i = 0 + 1; i < MAXY; i++)
+    {
+        screenGotoxy(0, i);
+        printf("%c", vbc);
+        screenGotoxy(MAXX, i);
+        printf("%c", vbc);
+    }
+
+    screenGotoxy(0, MAXY);
+    printf("%c", BOX_DWNLEFT);
+    for (int i = 0 + 1; i < MAXX; i++)
+    {
+        screenGotoxy(i, MAXY);
+        printf("%c", hbc);
+    }
+    screenGotoxy(MAXX, MAXY);
+    printf("%c", BOX_DWNRIGHT);
+
+    screenBoxDisable();
+}
+
 // Imprime o tabuleiro na tela
 void printBoard()
 {
@@ -38,6 +77,7 @@ void printBoard()
     screenGotoxy(0, 0);
     printf("Jogo da Velha\n\n");
 
+    // Desenha o conteúdo do tabuleiro na tela
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 3; ++j)
@@ -171,6 +211,7 @@ void printKey(int ch)
     }
 }
 
+// Função principal
 int main()
 {
     static int ch = 0;
