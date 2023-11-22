@@ -29,46 +29,12 @@ void initializeBoard()
     }
 }
 
-void screenDrawBorders()
+// Libera a memória alocada para o tabuleiro (função desnecessária neste caso)
+void freeBoard()
 {
-    char hbc = BOX_HLINE;
-    char vbc = BOX_VLINE;
-
-    screenClear();
-    screenBoxEnable();
-
-    // Desenha as bordas do tabuleiro na tela
-    screenGotoxy(0, 0);
-    printf("%c", BOX_UPLEFT);
-
-    for (int i = 0 + 1; i < MAXX; i++)
-    {
-        screenGotoxy(i, 0);
-        printf("%c", hbc);
-    }
-    screenGotoxy(MAXX, 0);
-    printf("%c", BOX_UPRIGHT);
-
-    for (int i = 0 + 1; i < MAXY; i++)
-    {
-        screenGotoxy(0, i);
-        printf("%c", vbc);
-        screenGotoxy(MAXX, i);
-        printf("%c", vbc);
-    }
-
-    screenGotoxy(0, MAXY);
-    printf("%c", BOX_DWNLEFT);
-    for (int i = 0 + 1; i < MAXX; i++)
-    {
-        screenGotoxy(i, MAXY);
-        printf("%c", hbc);
-    }
-    screenGotoxy(MAXX, MAXY);
-    printf("%c", BOX_DWNRIGHT);
-
-    screenBoxDisable();
+    // Não há alocação dinâmica no tabuleiro original, então não é necessário liberar memória aqui
 }
+
 
 // Imprime o tabuleiro na tela
 void printBoard()
@@ -322,6 +288,9 @@ int main()
             initializeBoard();
         }
     }
+
+    // Libera a memória alocada para o tabuleiro
+    freeBoard();
 
     // Encerra o ambiente gráfico, o teclado e o temporizador
     keyboardDestroy();
