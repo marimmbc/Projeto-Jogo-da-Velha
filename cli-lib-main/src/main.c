@@ -11,6 +11,10 @@
 #define MAXX 80
 #define MAXY 24
 
+// Constantes para definir a largura e altura do tabuleiro
+#define BOARD_WIDTH 13
+#define BOARD_HEIGHT 7
+
 // Variáveis globais
 char board[3][3];                   // Representação do tabuleiro do jogo da velha
 char player1[50], player2[50];      // Nomes dos jogadores
@@ -35,20 +39,38 @@ void freeBoard()
     // Não há alocação dinâmica no tabuleiro original, então não é necessário liberar memória aqui
 }
 
-
 // Imprime o tabuleiro na tela
 void printBoard()
 {
     screenSetColor(CYAN, DARKGRAY);
-    screenGotoxy(0, 0);
+    screenGotoxy((MAXX - strlen("Jogo da Velha")) / 2, 0);
     printf("Jogo da Velha\n\n");
+
+    // Ajuste nas posições de impressão para centralizar
+    int rowOffset = 3;
+    int colOffset = (MAXX - BOARD_WIDTH) / 2;
 
     // Desenha o conteúdo do tabuleiro na tela
     for (int i = 0; i < 3; ++i)
     {
+        screenGotoxy(colOffset, i * 4 + rowOffset);
         for (int j = 0; j < 3; ++j)
         {
-            printf(" %c ", board[i][j]);
+            char symbol = board[i][j];
+            if (symbol == 'O')
+            {
+                screenSetColor(MAGENTA, DARKGRAY);
+            }
+            else if (symbol == 'X')
+            {
+                screenSetColor(MAGENTA, DARKGRAY);
+            }
+            else
+            {
+                screenSetColor(CYAN, DARKGRAY);
+            }
+
+            printf(" %c ", symbol);
             if (j < 2)
             {
                 printf("|");
@@ -57,6 +79,7 @@ void printBoard()
         printf("\n");
         if (i < 2)
         {
+            screenGotoxy(colOffset, i * 4 + 1 + rowOffset);
             printf("-----------\n");
         }
     }
@@ -146,34 +169,33 @@ int getRandomMove()
 // Imprime mensagem de boas-vindas
 void printHello()
 {
-    screenSetColor(CYAN, DARKGRAY);
+    screenSetColor(GREEN, GREEN);
     screenGotoxy(0, 0);
-    printf("Bem-vindo ao Jogo da Velha no Terminal!\n\n");
+    printf("Bem-vindo ao Jogo da Velha!\n\n");
 }
 
-// Imprime a tecla pressionada no rodapé da tela
-void printKey(int ch)
+// Função para verificar se o usuário deseja jogar novamente
+int askToPlayAgain()
 {
-    screenSetColor(YELLOW, DARKGRAY);
-    screenGotoxy(35, 22);
-    printf("%s %d - %s %d ", player1, pontuacao1, player2, pontuacao2);
-
-    screenGotoxy(34, 23);
-    printf("            ");
-
-    if (ch == 27)
+    printf("Deseja jogar novamente? Digite S ou N : ");
+    while (1)
     {
-        screenGotoxy(36, 23);
-    }
-    else
-    {
-        screenGotoxy(39, 23);
-    }
+        char playAgain;
+        scanf(" %c", &playAgain);
 
-    printf("%d ", ch);
-    while (keyhit())
-    {
-        printf("%d ", readch());
+        if (playAgain == 's' || playAgain == 'S')
+        {
+            return 1; // Reinicializar o jogo
+        }
+        else if (playAgain == 'n' || playAgain == 'N')
+        {
+            printf("Jogo encerrado. Obrigado por jogar!\n");
+            return 0; // Sair do programa
+        }
+        else
+        {
+            printf("Opção inválida. Digite 'S' para jogar novamente ou 'N' para sair: ");
+        }
     }
 }
 
@@ -186,9 +208,6 @@ int main()
     screenInit(1);
     keyboardInit();
     timerInit(50);
-
-    printHello();
-    screenUpdate();
 
     // Pede o número de jogadores
     int numPlayers;
@@ -215,79 +234,85 @@ int main()
         return 1;
     }
 
-    initializeBoard();
-    currentPlayer = 1;
-
     // Loop principal do jogo
-    while (ch != 10)
-    { // Enter
-        printBoard();
+    do
+    {
+        initializeBoard();
+        currentPlayer = 1;
 
-        // Se for single player e a vez do jogador 2, realiza uma jogada aleatória
-        if (numPlayers == 1 && currentPlayer == 2)
+        // Remover a condição ch != 10 do loop principal
+        while (1)
         {
-            int move = getRandomMove();
-            printf("%s escolheu %d\n", player2, move);
-            makeMove(move);
-        }
-        else
-        {
-            int validMove = 0;
+            printBoard();
 
-            while (!validMove)
+            if (numPlayers == 1 && currentPlayer == 2)
             {
-                // Solicita a jogada do jogador atual
-                printf("%s, escolha um número de 1 a 9: ", (currentPlayer == 1) ? player1 : player2);
-                if (scanf("%d", &ch) == 1) // Verifica se a entrada é um número
-                {
-                    // Verifica se a jogada é válida
-                    if (ch >= 1 && ch <= 9 && board[(ch - 1) / 3][(ch - 1) % 3] == ' ')
-                    {
-                        validMove = 1;
-                    }
-                    else
-                    {
-                        printf("Posição inválida. Escolha outra.\n");
-                    }
-                }
-                else
-                {
-                    printf("Entrada inválida. Digite apenas um número.\n");
-                    // Limpar o buffer de entrada
-                    while (getchar() != '\n')
-                        ;
-                }
-            }
-
-            // Realiza a jogada do jogador
-            makeMove(ch);
-        }
-
-        // Atualiza a tela
-        screenUpdate();
-
-        // Verifica se há um vencedor ou se o jogo empatou
-        int winner = checkWinner();
-        if (winner)
-        {
-            printf("Parabéns, %s! Você venceu!\n", (winner == 'O') ? player1 : player2);
-            if (winner == 'O')
-            {
-                pontuacao1++;
+                int move = getRandomMove();
+                printf("%s escolheu %d\n", player2, move);
+                makeMove(move);
             }
             else
             {
-                pontuacao2++;
+                int validMove = 0;
+
+                while (!validMove)
+                {
+                    printf("%s, escolha um número de 1 a 9: ", (currentPlayer == 1) ? player1 : player2);
+                    if (scanf("%d", &ch) == 1)
+                    {
+                        if (ch >= 1 && ch <= 9 && board[(ch - 1) / 3][(ch - 1) % 3] == ' ')
+                        {
+                            validMove = 1;
+                        }
+                        else
+                        {
+                            printf("Posição inválida. Escolha outra.\n");
+                        }
+                    }
+                    else
+                    {
+                        printf("Entrada inválida. Digite apenas um número.\n");
+                        while (getchar() != '\n')
+                            ;
+                    }
+                }
+
+                makeMove(ch);
             }
-            printf("Pontuação atual: %s %d - %s %d\n", player1, pontuacao1, player2, pontuacao2);
-            initializeBoard();
+
+            screenUpdate();
+
+            int winner = checkWinner();
+            if (winner)
+            {
+                printf("Parabéns, %s! Você venceu!\n", (winner == 'O') ? player1 : player2);
+                if (winner == 'O')
+                {
+                    pontuacao1++;
+                }
+                else
+                {
+                    pontuacao2++;
+                }
+                printf("Pontuação atual: %s %d - %s %d\n", player1, pontuacao1, player2, pontuacao2);
+                initializeBoard();
+                break; // Sair do loop se houver um vencedor
+            }
+            else if (isBoardFull())
+            {
+                printf("O jogo empatou!\n");
+                initializeBoard();
+                break; // Sair do loop se o jogo empatar
+            }
+
+            // Pergunta ao jogador se deseja jogar novamente
+            if (!askToPlayAgain())
+            {
+                break; // Sair do loop principal se o jogador não quiser jogar novamente
+            }
         }
-        else if (isBoardFull())
-        {
-            printf("O jogo empatou!\n");
-            initializeBoard();
-        }
-    }
+
+    } while (1); // Loop principal agora é infinito, pois a condição de saída está dentro do loop interno
 
     // Libera a memória alocada para o tabuleiro
     freeBoard();
