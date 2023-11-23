@@ -1,19 +1,58 @@
-# Projeto-Jogo-da-Velha
-Estamos fazendo um Jogo da Velha em C para um projeto da cadeira de PIF
+Estamos desenvolvendo um programa em linguagem C para implementar o Jogo da Velha
 
 Instruções de usa
 
-1. Entre no link fornecido;
-2. Clone o repositório numa pasta que você saiba o caminho;
-3. Vá até essa pasta e entre na pasta cli-lib-main;
-4. Dentro da pasta cli-lib-main você irá encontrar um arquivo executável chamado cli-lib-Jogo_da_velha;
-5. aClique nesse arquivo e iniciará o jogo;
-6. Ao iniciar o jogo, ele solicitará se terá 1 ou 2 jogadores;
-7. Ao digitar ‘ 1 ‘ , você estará selecionando a opção de um único jogador, assim ele solicitará o nome do Jogador 1, e o Jogador 2 será a própria maquina ;
-8. Se caso você digitar ‘ 2 ‘, estará selecionando a opção de dois jogadores, assim ele solicitará o nome do Jogador 1 e do Jogador 2 ;
-9. Assim inicia-se o jogo, sempre quem jogará primeiro é o Jogador 1;
-10. O jogo solicitará que você digite um número de 1 a 9, que representa os espaços do tabuleiro de cima para baixo, onde o numero 1 representa o espaço da coluna da esquerda e da linha do topo;
-11. O Jogador 1 preencherá o tabuleiro com a letra ‘ O ‘, e o Jogador 2 preencherá o tabuleiro com a letra ‘ X ‘;
-12. Vencerá o primeiro que preencher 3 espaços alinhados, ou na diagonal, ou na vertical, ou na horizontal;
-13.  Digite S OU N para, resrepctivamente continuar jogando ou não
+# Jogo da Velha em C
+
+Este é um projeto simples de Jogo da Velha implementado em C. O código permite que dois jogadores humanos ou um jogador humano e um jogador automático (computador) joguem entre si. Abaixo estão as instruções detalhadas sobre como compilar, executar e jogar o Jogo da Velha.
+
+## Instruções de Uso
+
+### Compilação:
+
+Certifique-se de ter um compilador C instalado no seu sistema.
+
+1. Abra um terminal.
+2. Navegue até o diretório do projeto.
+3. Compile o código usando o seguinte comando:
+
+    ```bash
+    gcc -o jogo_da_velha main.c screen.c keyboard.c timer.c -lm
+    ```
+
+### Execução:
+
+1. Após a compilação, execute o jogo usando o seguinte comando:
+
+    ```bash
+    ./jogo_da_velha
+    ```
+
+### Regras do Jogo:
+
+1. **Número de Jogadores:**
+    - O jogo suporta 1 ou 2 jogadores. Você será solicitado a inserir o número de jogadores no início.
+
+2. **Nomes dos Jogadores:**
+    - Se estiver jogando com dois jogadores, você será solicitado a inserir os nomes dos jogadores.
+
+3. **Jogando o Jogo:**
+    - O tabuleiro é numerado de 1 a 9, de cima para baixo e da esquerda para a direita.
+    - Digite o número correspondente à posição desejada quando for sua vez de jogar.
+
+4. **Fim do Jogo:**
+    - O jogo termina quando um jogador vence preenchendo 3 espaços consecutivos na horizontal, vertical ou diagonal, ou quando o tabuleiro está completamente preenchido (empate).
+
+5. **Pontuação:**
+    - Após cada jogo, a pontuação é exibida na tela, indicando o número de vitórias de cada jogador.
+
+6. **Jogar Novamente:**
+    - Ao final de cada jogo, você será perguntado se deseja jogar novamente. Digite 'S' para jogar novamente ou 'N' para encerrar o jogo.
+
+### Observações:
+
+- Certifique-se de seguir as instruções exibidas na tela durante o jogo.
+- As cores utilizadas na exibição do tabuleiro podem variar dependendo do ambiente de execução.
+
+Aproveite jogando o Jogo da Velha em C! Se tiver sugestões ou encontrar problemas, sinta-se à vontade para contribuir ou reportar issues. Divirta-se!
 
